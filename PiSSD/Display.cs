@@ -255,7 +255,6 @@ namespace PiSSD
                     }
                 }
 
-                //listOfInts.Reverse();
                 this.DisplayDigits = listOfInts.ToArray();
             }
         }
