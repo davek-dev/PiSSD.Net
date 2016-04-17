@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiSSD", "PiSSD.csproj", "{FFC5FB10-58A0-4A40-984A-D7A3F498D850}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiSSDDemo", "..\PiSSDDemo\PiSSDDemo.csproj", "{85F5EAC2-E0DA-4481-B848-4CE424ED149C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiSSD4511Demo", "PiSSD4511Demo\PiSSD4511Demo.csproj", "{82DF672F-4D55-4386-841A-AC64EDC2C831}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,26 @@ Global
 		{85F5EAC2-E0DA-4481-B848-4CE424ED149C}.Release|x86.ActiveCfg = Release|x86
 		{85F5EAC2-E0DA-4481-B848-4CE424ED149C}.Release|x86.Build.0 = Release|x86
 		{85F5EAC2-E0DA-4481-B848-4CE424ED149C}.Release|x86.Deploy.0 = Release|x86
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Debug|ARM.ActiveCfg = Debug|ARM
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Debug|ARM.Build.0 = Debug|ARM
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Debug|ARM.Deploy.0 = Debug|ARM
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Debug|x64.ActiveCfg = Debug|x64
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Debug|x64.Build.0 = Debug|x64
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Debug|x64.Deploy.0 = Debug|x64
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Debug|x86.ActiveCfg = Debug|x86
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Debug|x86.Build.0 = Debug|x86
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Debug|x86.Deploy.0 = Debug|x86
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Release|Any CPU.ActiveCfg = Release|x86
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Release|ARM.ActiveCfg = Release|ARM
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Release|ARM.Build.0 = Release|ARM
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Release|ARM.Deploy.0 = Release|ARM
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Release|x64.ActiveCfg = Release|x64
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Release|x64.Build.0 = Release|x64
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Release|x64.Deploy.0 = Release|x64
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Release|x86.ActiveCfg = Release|x86
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Release|x86.Build.0 = Release|x86
+		{82DF672F-4D55-4386-841A-AC64EDC2C831}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,23 +13,23 @@ namespace PiSSD
         CancellationTokenSource cts;
         CancellationToken token;
 
-        private GpioPin PinSegA;
-        private GpioPin PinSegB;
-        private GpioPin PinSegC;
-        private GpioPin PinSegD;
-        private GpioPin PinSegE;
-        private GpioPin PinSegF;
-        private GpioPin PinSegG;
+        private GpioPin pinSegA;
+        private GpioPin pinSegB;
+        private GpioPin pinSegC;
+        private GpioPin pinSegD;
+        private GpioPin pinSegE;
+        private GpioPin pinSegF;
+        private GpioPin pinSegG;
 
-        private GpioPin[] Displays;
-        private int[] DisplayDigits;
+        private GpioPin[] displays;
+        private int[] displayDigits;
 
-        private GpioPin PinDP;
+        private GpioPin pinDP;
 
         private int displayNo = 0;
         private bool displayLeadingZero;
         private bool running = false;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="Display"/> class.
         /// </summary>
@@ -43,23 +43,23 @@ namespace PiSSD
         /// <param name="displayPins">The displays pin [one for each display digit].</param>
         public Display(int segA, int segB, int segC, int segD, int segE, int segF, int segG, params int[] displayPins)
         {
-            this.Displays = new GpioPin[displayPins.Length];
+            this.displays = new GpioPin[displayPins.Length];
 
             for (int i = 0; i < displayPins.Length; i++)
             {
                 GpioPin pin = GpioController.GetDefault().OpenPin(displayPins[i]);
                 pin.Write(GpioPinValue.High);
                 pin.SetDriveMode(GpioPinDriveMode.Output);
-                this.Displays[i] = pin;
+                this.displays[i] = pin;
             }
 
-            this.SetupOutputPin(ref this.PinSegA, segA);
-            this.SetupOutputPin(ref this.PinSegB, segB);
-            this.SetupOutputPin(ref this.PinSegC, segC);
-            this.SetupOutputPin(ref this.PinSegD, segD);
-            this.SetupOutputPin(ref this.PinSegE, segE);
-            this.SetupOutputPin(ref this.PinSegF, segF);
-            this.SetupOutputPin(ref this.PinSegG, segG);
+            this.SetupOutputPin(ref this.pinSegA, segA);
+            this.SetupOutputPin(ref this.pinSegB, segB);
+            this.SetupOutputPin(ref this.pinSegC, segC);
+            this.SetupOutputPin(ref this.pinSegD, segD);
+            this.SetupOutputPin(ref this.pinSegE, segE);
+            this.SetupOutputPin(ref this.pinSegF, segF);
+            this.SetupOutputPin(ref this.pinSegG, segG);
 
             this.cts = new CancellationTokenSource();
             this.token = new CancellationToken();
@@ -70,7 +70,7 @@ namespace PiSSD
         /// </summary>
         /// <param name="pin">The pin.</param>
         /// <param name="pinNo">The pin no.</param>
-        private void SetupOutputPin(ref GpioPin pin, int pinNo)
+        protected void SetupOutputPin(ref GpioPin pin, int pinNo)
         {
             pin = GpioController.GetDefault().OpenPin(pinNo);
             pin.Write(GpioPinValue.High);
@@ -81,7 +81,7 @@ namespace PiSSD
         /// Sets the pins high.
         /// </summary>
         /// <param name="pins">The pins.</param>
-        private void SetHigh(GpioPin[] pins)
+        protected void SetHigh(GpioPin[] pins)
         {
             foreach (GpioPin p in pins)
             {
@@ -93,7 +93,7 @@ namespace PiSSD
         /// Sets the pins low.
         /// </summary>
         /// <param name="pins">The pins.</param>
-        private void SetLow(GpioPin[] pins)
+        protected void SetLow(GpioPin[] pins)
         {
             foreach (GpioPin p in pins)
             {
@@ -104,9 +104,9 @@ namespace PiSSD
         /// <summary>
         /// Clears the display.
         /// </summary>
-        private void ClearDisplay()
+        protected virtual void ClearDisplay()
         {
-            this.SetHigh(this.Displays);
+            this.SetHigh(this.displays);
         }
 
         /// <summary>
@@ -114,56 +114,56 @@ namespace PiSSD
         /// </summary>
         /// <param name="displayPin">The display pin.</param>
         /// <param name="value">The value.</param>
-        private void SetDisplay(GpioPin displayPin, int value)
+        protected virtual void SetDisplay(GpioPin displayPin, int value)
         {
             this.ClearDisplay();
 
             switch (value)
             {
                 case 0:
-                    this.SetHigh(new GpioPin[] { this.PinSegA, this.PinSegB, this.PinSegC, this.PinSegD, this.PinSegE, this.PinSegF });
-                    this.SetLow(new GpioPin[] { this.PinSegG });
+                    this.SetHigh(new GpioPin[] { this.pinSegA, this.pinSegB, this.pinSegC, this.pinSegD, this.pinSegE, this.pinSegF });
+                    this.SetLow(new GpioPin[] { this.pinSegG });
                     break;
                 case 1:
-                    this.SetHigh(new GpioPin[] { this.PinSegB, this.PinSegC });
-                    this.SetLow(new GpioPin[] { this.PinSegA, this.PinSegD, this.PinSegE, this.PinSegF, this.PinSegG });
+                    this.SetHigh(new GpioPin[] { this.pinSegB, this.pinSegC });
+                    this.SetLow(new GpioPin[] { this.pinSegA, this.pinSegD, this.pinSegE, this.pinSegF, this.pinSegG });
                     break;
                 case 2:
-                    this.SetHigh(new GpioPin[] { this.PinSegA, this.PinSegB, this.PinSegD, this.PinSegE, this.PinSegG });
-                    this.SetLow(new GpioPin[] { this.PinSegC, this.PinSegF });
+                    this.SetHigh(new GpioPin[] { this.pinSegA, this.pinSegB, this.pinSegD, this.pinSegE, this.pinSegG });
+                    this.SetLow(new GpioPin[] { this.pinSegC, this.pinSegF });
                     break;
                 case 3:
-                    this.SetHigh(new GpioPin[] { this.PinSegA, this.PinSegB, this.PinSegC, this.PinSegD, this.PinSegG });
-                    this.SetLow(new GpioPin[] { this.PinSegE, this.PinSegF });
+                    this.SetHigh(new GpioPin[] { this.pinSegA, this.pinSegB, this.pinSegC, this.pinSegD, this.pinSegG });
+                    this.SetLow(new GpioPin[] { this.pinSegE, this.pinSegF });
                     break;
                 case 4:
-                    this.SetHigh(new GpioPin[] { this.PinSegB, this.PinSegC, this.PinSegF, this.PinSegG });
-                    this.SetLow(new GpioPin[] { this.PinSegA, this.PinSegD, this.PinSegE });
+                    this.SetHigh(new GpioPin[] { this.pinSegB, this.pinSegC, this.pinSegF, this.pinSegG });
+                    this.SetLow(new GpioPin[] { this.pinSegA, this.pinSegD, this.pinSegE });
                     break;
                 case 5:
-                    this.SetHigh(new GpioPin[] { this.PinSegA, this.PinSegC, this.PinSegD, this.PinSegF, this.PinSegG });
-                    this.SetLow(new GpioPin[] { this.PinSegB, this.PinSegE });
+                    this.SetHigh(new GpioPin[] { this.pinSegA, this.pinSegC, this.pinSegD, this.pinSegF, this.pinSegG });
+                    this.SetLow(new GpioPin[] { this.pinSegB, this.pinSegE });
                     break;
                 case 6:
-                    this.SetHigh(new GpioPin[] { this.PinSegA, this.PinSegC, this.PinSegD, this.PinSegE, this.PinSegF, this.PinSegG });
-                    this.SetLow(new GpioPin[] { this.PinSegB });
+                    this.SetHigh(new GpioPin[] { this.pinSegA, this.pinSegC, this.pinSegD, this.pinSegE, this.pinSegF, this.pinSegG });
+                    this.SetLow(new GpioPin[] { this.pinSegB });
                     break;
                 case 7:
-                    this.SetHigh(new GpioPin[] { this.PinSegA, this.PinSegB, this.PinSegC });
-                    this.SetLow(new GpioPin[] { this.PinSegD, this.PinSegE, this.PinSegF, this.PinSegG });
+                    this.SetHigh(new GpioPin[] { this.pinSegA, this.pinSegB, this.pinSegC });
+                    this.SetLow(new GpioPin[] { this.pinSegD, this.pinSegE, this.pinSegF, this.pinSegG });
                     break;
                 case 8:
-                    this.SetHigh(new GpioPin[] { this.PinSegA, this.PinSegB, this.PinSegC, this.PinSegD, this.PinSegE, this.PinSegF, this.PinSegG });
+                    this.SetHigh(new GpioPin[] { this.pinSegA, this.pinSegB, this.pinSegC, this.pinSegD, this.pinSegE, this.pinSegF, this.pinSegG });
                     break;
                 case 9:
-                    this.SetHigh(new GpioPin[] { this.PinSegA, this.PinSegB, this.PinSegC, this.PinSegD, this.PinSegF, this.PinSegG });
-                    this.SetLow(new GpioPin[] { this.PinSegE });
+                    this.SetHigh(new GpioPin[] { this.pinSegA, this.pinSegB, this.pinSegC, this.pinSegD, this.pinSegF, this.pinSegG });
+                    this.SetLow(new GpioPin[] { this.pinSegE });
                     break;
                 case 10:  // Clear Display
-                    this.SetLow(new GpioPin[] { this.PinSegA, this.PinSegB, this.PinSegC, this.PinSegD, this.PinSegE, this.PinSegF, this.PinSegG });
+                    this.SetLow(new GpioPin[] { this.pinSegA, this.pinSegB, this.pinSegC, this.pinSegD, this.pinSegE, this.pinSegF, this.pinSegG });
                     break;
                 default:
-                    this.SetLow(new GpioPin[] { this.PinSegA, this.PinSegB, this.PinSegC, this.PinSegD, this.PinSegE, this.PinSegF, this.PinSegG });
+                    this.SetLow(new GpioPin[] { this.pinSegA, this.pinSegB, this.pinSegC, this.pinSegD, this.pinSegE, this.pinSegF, this.pinSegG });
                     break;
             }
 
@@ -177,7 +177,7 @@ namespace PiSSD
         {
             string testStr = "";
 
-            foreach(GpioPin d in this.Displays)
+            foreach(GpioPin d in this.displays)
             {
                 testStr = testStr + "8";
             }
@@ -207,13 +207,18 @@ namespace PiSSD
             this.displayNo = number;
             this.displayLeadingZero = displayLeadingZero;
 
+            if (this.displayDigits == null)
+            {
+                this.Blank();
+            }
+
             if (this.displayNo < 0)
             {
                 throw new ArgumentOutOfRangeException("Number cannot be negative");
             }
 
             int checkMax = 1;
-            for(int i = 0; i < this.DisplayDigits.Length; i++)
+            for(int i = 0; i < this.displayDigits.Length; i++)
             {
                 checkMax = checkMax * 10;
             }
@@ -226,9 +231,9 @@ namespace PiSSD
             if (this.displayNo == 0)
             {
                 this.Blank();
-                if(this.DisplayDigits.Length > 0)
+                if(this.displayDigits.Length > 0)
                 {
-                    this.DisplayDigits[0] = 0;
+                    this.displayDigits[0] = 0;
                 }
             }
             else
@@ -242,20 +247,20 @@ namespace PiSSD
 
                 if (displayLeadingZero)
                 {
-                    while (listOfInts.Count < this.Displays.Length)
+                    while (listOfInts.Count < this.displays.Length)
                     {
                         listOfInts.Add(0);
                     }
                 }
                 else
                 {
-                    while (listOfInts.Count < this.Displays.Length)
+                    while (listOfInts.Count < this.displays.Length)
                     {
                         listOfInts.Add(10);
                     }
                 }
 
-                this.DisplayDigits = listOfInts.ToArray();
+                this.displayDigits = listOfInts.ToArray();
             }
         }
 
@@ -293,16 +298,16 @@ namespace PiSSD
             {
                 while (!this.cts.IsCancellationRequested)
                 {
-                    if (this.DisplayDigits == null)
+                    if (this.displayDigits == null)
                     {
                         this.Blank();
                     }
 
-                    int[] arrDigs = this.DisplayDigits;
+                    int[] arrDigs = this.displayDigits;
 
                     for (int i = 0; i < arrDigs.Length; i++)
                     {
-                        this.SetDisplay(this.Displays[i], arrDigs[i]);
+                        this.SetDisplay(this.displays[i], arrDigs[i]);
                     }
                 }
             }, token);
@@ -310,12 +315,35 @@ namespace PiSSD
 
         private void Blank()
         {
-            this.DisplayDigits = new int[this.Displays.Length];
+            this.displayDigits = new int[this.displays.Length];
 
-            for (int i = 0; i < this.Displays.Length; i++)
+            for (int i = 0; i < this.displays.Length; i++)
             {
-                this.DisplayDigits[i] = 10;
+                this.displayDigits[i] = 10;
             }
         }
+
+        #region Protected Accessors
+
+        protected GpioPin[] Displays
+        {
+            get
+            {
+                return this.displays;
+            }
+
+            set
+            {
+                this.displays = value;
+            }
+        }      
+
+        protected Display()
+        {
+            this.cts = new CancellationTokenSource();
+            this.token = new CancellationToken();
+        }
+
+        #endregion
     }
 }
